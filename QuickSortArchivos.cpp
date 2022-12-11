@@ -2,22 +2,29 @@
 Nombre: Erik Villarreal
 Fecha: 8 de diciembre 2022
 */
+#include <bits/stdc++.h>
 #include<iostream>
 #include<fstream>
 #include<string>
 #include<sstream>
-#include<ctime>
+#include<sys/time.h>
 
 using namespace std;
 
 void menu();
 void menu_print();
 int pivotear(int *V, int b, int t);
-int QuickSort(int *V, int b, int t);
-int read(int array[], int arrayAux[], string file_path);
+double QuickSort(int *V, int b, int t);
+double read(int array[], int arrayAux[], string file_path);
 void sort(int array[], int arrayAux[], string path, int dim);
 void print_array(int array[], int arrayAux[], int dim);
 void print_time();
+
+long getTime(){
+    struct timeval inicio;
+    gettimeofday(&inicio, NULL);
+    return inicio.tv_sec*5000 + inicio.tv_usec;
+}
 
 int v5[5000]; //Vector leido
 int v50[50000]; //Vector leido
@@ -25,13 +32,13 @@ int v350[350000]; //Vector leido
 int V5[5000]; //Vector ordenado
 int V50[50000]; //Vector ordenado
 int V350[350000]; //Vector ordenado
-clock_t time_req;
-float time_exe_5k=0.0;
-float time_exe_50k=0.0;
-float time_exe_350k=0.0;
-float time_sort_5k=0.0;
-float time_sort_50k=0.0;
-float time_sort_350k=0.0;
+
+double time_exe_5k;
+double time_exe_50k;
+double time_exe_350k;
+double time_sort_5k;
+double time_sort_50k;
+double time_sort_350k;
 
 int main(){
     string path;
@@ -122,7 +129,7 @@ void menu_print(){
         cout << "|                   Visualizar vectores                 |" << endl;
         cout << "|-------------------------------------------------------|" << endl;
         cout << "| 1. Vector 5.000 datos     | 2. Vector 50.000 datos    |" << endl;
-        cout << "| 3. Vector 50.000 datos    | 4. Menu principal         |" << endl;
+        cout << "| 3. Vector 350.000 datos   | 4. Menu principal         |" << endl;
         cout << "|-------------------------------------------------------|" << endl;
         cout<<"Ingrese una opcion: ";
         cin>>op;
@@ -171,22 +178,28 @@ int pivotear(int *V, int b, int t){
     V[pivote] = temp;
     return pivote;
 }
-int QuickSort(int *V, int b, int t){
-    time_req = clock();
-    float exe_time;
+double QuickSort(int *V, int b, int t){
+    long inicio = getTime();
+    double timeSec;
+    long timeMicroSec;
+    double exe_time;
     int pivote;
     if(b < t){
         pivote = pivotear(V, b, t);
         QuickSort(V, b, pivote-1);
         QuickSort(V, pivote+1, t);
     }
-    time_req = clock() - time_req;
-    exe_time = (float)time_req /*/ CLOCKS_PER_SEC*/;
+    long final = getTime();
+    timeMicroSec = final - inicio;
+    timeSec = timeMicroSec * pow(10,-6);
+    exe_time = timeSec;
     return exe_time;
 }
-int read(int array[], int arrayAux[], string file_path){
-    time_req = clock();
-    float exe_time;
+double read(int array[], int arrayAux[], string file_path){
+    long inicio = getTime();
+    double timeSec;
+    long timeMicroSec;
+    double exe_time;
     ifstream file;
     string dato;
     file.open(file_path.c_str(), ios :: in);
@@ -205,9 +218,12 @@ int read(int array[], int arrayAux[], string file_path){
     }
     cout << endl;
     file.close();
-    time_req = clock() - time_req;
-    exe_time = (float)time_req /*/ CLOCKS_PER_SEC*/;
+    long final = getTime();
+    timeMicroSec = final - inicio;
+    timeSec = timeMicroSec * pow(10,-6);
+    exe_time = timeSec;
     return exe_time;
+
 }
 void sort(int array[], int arrayAux[], string path, int dim){
     cout << endl << "Se leeran los datos del archivo"<< endl;
@@ -244,7 +260,7 @@ void print_time(){
     cout << "|------------------------|-------------------|-------------------|-------------------|" << endl;
     cout << "|                        |      5.000 datos  |    50.000 datos   |   350.000 datos   |" << endl;
     cout << "|------------------------|-------------------|-------------------|-------------------|" << endl;
-    cout << "| Tiempo de lectura:     |       "<<time_exe_5k<<"                   "<<time_exe_50k<<"                "<<time_exe_350k<<"         |" << endl;
-    cout << "| Tiempo ordenamiento:   |       "<<time_sort_5k<<"                   "<<time_sort_50k<<"                "<<time_sort_350k<<"         |" << endl;
+    cout << "| Tiempo de lectura:     |     "<<time_exe_5k<<"             "<<time_exe_50k<<"           "<<time_exe_350k<<"      |" << endl;
+    cout << "| Tiempo ordenamiento:   |     "<<time_sort_5k<<"             "<<time_sort_50k<<"           "<<time_sort_350k<<"      |" << endl;
     cout << "|------------------------|-------------------|-------------------|-------------------|" << endl;
 }
